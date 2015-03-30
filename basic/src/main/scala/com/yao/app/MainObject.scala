@@ -27,6 +27,12 @@ object MainObject {
             print(strs(i))
             
         val numNames = Array("1","2","3")
+        
+        val r = new Rational(2,3)
+        println(r*2)
+        
+        implicit def intToRational(x:Int) = new Rational(x)
+        println(2*r)
     }
 
     def max(x: Int, y: Int): Int = {
@@ -37,4 +43,20 @@ object MainObject {
     def max2(x: Int, y: Int) = if (x > y) x else y
     
     def greet()=println("Hello world2")
+}
+class Rational(n:Int,d:Int){
+    require(d!=0)
+    private val g = gcd(n,d)
+    val number = n/g
+    val denom = d/g
+    def this(n:Int) = this(n,1)
+    def +(that:Rational) = new Rational(this.number*that.denom+this.denom*that.number,this.denom*that.denom)
+    def +(i:Int) = new Rational(this.denom*i+this.number,this.denom)
+    def *(that:Rational) = new Rational(this.number*that.number,this.denom*that.denom)
+    def *(i:Int) = new Rational(this.number*i,this.denom)
+    
+    override def toString = number +"/"+denom;
+    
+    private def gcd(a:Int,b:Int):Int = if(b==0) a else gcd(b,a%b)
+    
 }
