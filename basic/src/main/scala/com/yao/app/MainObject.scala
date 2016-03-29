@@ -1,5 +1,8 @@
 package com.yao.app
 
+import java.io.File
+import java.io.PrintWriter
+
 object MainObject {
     def main(args: Array[String]): Unit = {
         println(if (!args.isEmpty) args(0) else "default args")
@@ -55,22 +58,24 @@ object MainObject {
             println(file.getName + ":" + trimed)
             println(file.getPath)
         }
-        
+
         println("--------------")
         println(fileLinesLength)
+
+        val map = Map("123" -> "hello")
+        val b23 = map + ("1234" -> "world")
     }
 
     def fileLines(file: java.io.File) =
         scala.io.Source.fromFile(file).getLines().toList
-        
-    def fileLinesLength()=
-        for{
+
+    def fileLinesLength() =
+        for {
             file <- (new java.io.File(".")).listFiles
             if file.getName.endsWith(".sbt")
             line <- scala.io.Source.fromFile(file).getLines()
             trimed = line.trim()
-        } yield trimed.length
-    
+        } yield { trimed.length }
 
     def max(x: Int, y: Int): Int = {
         if (x > y) x
@@ -80,6 +85,31 @@ object MainObject {
     def max2(x: Int, y: Int) = if (x > y) x else y
 
     def greet() = println("Hello world2")
+
+    /**
+     * 借贷模式
+     */
+    def withPrintWriter(file: File)(op: PrintWriter => Unit) {
+        val writer = new PrintWriter(file)
+        try {
+            op(writer)
+        } finally {
+            writer.close()
+        }
+    }
+
+    val file = new File("date.txt");
+    withPrintWriter(file) {
+        writer => writer.print(new java.util.Date())
+    }
+
+    // 传名参数
+    def testCallByName(op: () => Boolean) = if (op()) 1 else 2
+    def testCallByName2(op: => Boolean) = if (op) 1 else 2
+    
+    println(testCallByName(()=>1>2))
+    println(testCallByName2(1>2))
+    
 }
 class Rational(n: Int, d: Int) {
     require(d != 0)
