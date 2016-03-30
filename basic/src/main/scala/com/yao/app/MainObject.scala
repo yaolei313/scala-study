@@ -106,10 +106,20 @@ object MainObject {
     // 传名参数
     def testCallByName(op: () => Boolean) = if (op()) 1 else 2
     def testCallByName2(op: => Boolean) = if (op) 1 else 2
+
+    println(testCallByName(() => 1 > 2))
+    println(testCallByName2(1 > 2))
+
+    val t: Rational = null
+    //val t2:Int = null null不适用于值类型
+
+    // 标明不正常的终止
+    def error(msg: String): Nothing = throw new RuntimeException(msg)
+
+    def divide(x: Int, y: Int): Int = if (y != 0) x / y else error("123")
     
-    println(testCallByName(()=>1>2))
-    println(testCallByName2(1>2))
-    
+    def divide2(x: Int, y: Int): Int = if (y != 0) x / y else throw new RuntimeException("123") //抛出异常的类型是Nothing
+
 }
 class Rational(n: Int, d: Int) {
     require(d != 0)

@@ -9,22 +9,27 @@ abstract class Element {
 
     //def above(that: Element) = new ArrayElement(this.content ++ that.content)
     // 使用工厂类
-    def above(that: Element) = ele(this.content ++ that.content)
+    def above(that: Element): Element = {
+        val new1 = this widen that.width
+        val new2 = that widen this.width
+        ele(new1.content ++ new2.content)
+    }
 
-    def beside(that: Element) = {
+    def beside(that: Element): Element = {
         // directive
         /*val content = new Array[String](this.content.length);
         for(i <- 0 until this.content.length)
             content(i) = this.content(i)+that.content(i)
         new ArrayElement(content)*/
-
+        val new1 = this heighten that.height
+        val new2 = that heighten this.height
         ele(
             for (
-                (line1, line2) <- this.content zip that.content
+                (line1, line2) <- new1.content zip new2.content
             ) yield line1 + line2)
     }
 
-    def widen(w: Int) = {
+    def widen(w: Int): Element = {
         if (w <= width)
             this
         else {
@@ -34,7 +39,7 @@ abstract class Element {
         }
     }
 
-    def heighten(h: Int) = {
+    def heighten(h: Int): Element = {
         if (h <= height)
             this
         else {
@@ -75,25 +80,30 @@ object Main extends App {
         val RIGHT, BOTTOM, LEFT, TOP = Value
     }
     import Direction._
-    
+
     val param1 = 8
     val direction = Direction.RIGHT
-    
-    def sprial(w: Int, direction: Int) : Element = {
-        if(w ==1)
-            ele("+")
-        else {
-            val sp = sprial(w-1, (direction+3)%4)
-            ele(" ")
-        }
-    }
+    val corner = ele("+")
+    val space = ele(" ")
 
-    def sprial2(w: Int, direct: Direction): Element = {
+    def sprial(w: Int, direction: Int): Element = {
         if (w == 1)
             ele("+")
         else {
-            //val sp = sprial(w-1,Direction.,)
-            ele(" ")
+            val sp = sprial(w - 1, (direction + 3) % 4)
+            val verticalBar = ele('|', 1, sp.height)
+            val horizontalBar = ele('-', sp.width, 1)
+            if (direction == 0) // right
+                (corner beside horizontalBar) above (sp beside space)
+            else if (direction == 1) // down
+                (sp above space) beside (corner above verticalBar)
+            else if (direction == 2) // left
+                (space beside sp) above (horizontalBar beside corner)
+            else // up
+                (verticalBar above corner) beside (space above sp)
         }
     }
+
+    println(sprial(8, 0))
+
 }
