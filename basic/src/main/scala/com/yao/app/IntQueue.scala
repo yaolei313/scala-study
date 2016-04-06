@@ -19,7 +19,7 @@ trait Incrementing extends IntQueue {
 
 trait Filtering extends IntQueue {
     abstract override def put(x: Int) {
-        if (x >= 0) super.put(x + 1)
+        if (x >= 0) super.put(x)
     }
 }
 
@@ -38,4 +38,9 @@ object TraintMain extends App {
     queue.put(2)
     println(queue.get())
     println(queue.get())
+    
+    val q2 = new BasicIntQueue with Filtering with Incrementing with Doubling
+    q2.put(11)
+    q2.put(-1)
+    println(q2.get())
 }
