@@ -12,6 +12,7 @@ abstract class Element {
     def above(that: Element): Element = {
         val new1 = this widen that.width
         val new2 = that widen this.width
+        assert(new1.width == new2.width)
         ele(new1.content ++ new2.content)
     }
 
@@ -37,7 +38,7 @@ abstract class Element {
             val right = ele(' ', w - width - left.width, height)
             left beside this beside right
         }
-    }
+    } ensuring (w <= _.width)
 
     def heighten(h: Int): Element = {
         if (h <= height)
