@@ -1,3 +1,7 @@
+/*
+ * 基本知识
+ * 类定义
+ */
 package com.yao.app
 
 import java.io.File
@@ -69,6 +73,7 @@ object MainObject {
         val r = new Rational(2, 3)
         println(r * 2)
 
+        // 隐式类型转换
         implicit def intToRational(x: Int) = new Rational(x)
         println(2 * r)
 
@@ -93,9 +98,7 @@ object MainObject {
         val map = Map("123" -> "hello")
         val b23 = map + ("1234" -> "world")
 
-        /**
-         * 借贷模式
-         */
+        // 借贷模式 柯里化
         def withPrintWriter(file: File)(op: PrintWriter => Unit) {
             val writer = new PrintWriter(file)
             try {
@@ -125,13 +128,43 @@ object MainObject {
         println(t2 equals t3)
         //val t2:Int = null null不适用于值类型
 
-        // 标明不正常的终止
+        // Nothing标明不正常的终止
         def error(msg: String): Nothing = throw new RuntimeException(msg)
 
         def divide(x: Int, y: Int): Int = if (y != 0) x / y else error("123")
 
         def divide2(x: Int, y: Int): Int = if (y != 0) x / y else throw new RuntimeException("123") //抛出异常的类型是Nothing
+        
+        val list1 = List("one", "two", "three")
+        val list2 = List("hello", "world")
+
+        // zip 以最短长度作为新长度
+        val result = for (obj <- list1.zip(list2)) yield {
+            obj._1 + obj._2
+        }
+
+        println(result.mkString(","))
+
+        // 对象list字段提取 投影操作
+        class Test(val id: Int, val name: String)
+
+        def getIds[A, B](l: List[A], op: A => B): List[B] = {
+            for (o <- l)
+                yield op(o)
+        }
+
+        val list = List[Test](new Test(1, "hello"), new Test(2, "world"));
+        val idList = getIds[Test, Int](list, o => o.id)
+        print(idList mkString " ")
+
+        // 测试与断言
+        testEnsuring(8)
     }
+    
+    def testEnsuring(i: Int): Int = {
+        //assert(i==10)
+        if (i > 10) i else 10 ensuring (i < 10)
+    } ensuring (_ < 10) // 不能换行，表示对本方法的返回结果进行断言
 
     def fileLines(file: java.io.File) =
         scala.io.Source.fromFile(file).getLines().toList

@@ -1,3 +1,6 @@
+/*
+ * 类和伴生对象
+ */
 package com.yao.app
 
 import Element._
