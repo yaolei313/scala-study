@@ -11,6 +11,7 @@ EclipseKeys.withBundledScalaContainers := false
 libraryDependencies ++= Seq(
 	"junit" % "junit" % "4.12" % "test",
 	"com.google.guava" % "guava" % "19.0",
+	"com.typesafe.play" %% "play-ws" % "2.5.4",
 	"org.scalatest" %% "scalatest" % "2.2.6" % "test"
 )
 
